@@ -1,4 +1,4 @@
-# Aurora Glade Adventure — Game Design Document
+# Mischief Cat — Game Design Document
 
 ## Table of Contents
 1. [Vision Statement](#vision-statement)
