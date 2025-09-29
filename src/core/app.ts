@@ -32,6 +32,20 @@ export class App {
   private lastTime = 0;
   private running = false;
   private cameraYaw = Math.PI * 0.8;
+  private pointerLocked = false;
+  private readonly mouseSensitivity = 0.0025;
+  private readonly handleMouseMove = (event: MouseEvent) => {
+    if (!this.pointerLocked) return;
+    this.cameraYaw -= event.movementX * this.mouseSensitivity;
+  };
+  private readonly handlePointerLockChange = () => {
+    this.pointerLocked = document.pointerLockElement === this.renderer.domElement;
+  };
+  private readonly handleCanvasClick = () => {
+    if (document.pointerLockElement !== this.renderer.domElement) {
+      this.renderer.domElement.requestPointerLock();
+    }
+  };
 
   constructor(private readonly container: HTMLElement) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -41,6 +55,9 @@ export class App {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.container.appendChild(this.renderer.domElement);
+    this.renderer.domElement.addEventListener('click', this.handleCanvasClick);
+    document.addEventListener('pointerlockchange', this.handlePointerLockChange);
+    document.addEventListener('mousemove', this.handleMouseMove);
     this.onResize = this.onResize.bind(this);
     window.addEventListener('resize', this.onResize);
     const result = buildEnvironment(this.world, this.scene, this.bus);
@@ -79,6 +96,12 @@ export class App {
 
   dispose(): void {
     this.running = false;
+    if (document.pointerLockElement === this.renderer.domElement) {
+      document.exitPointerLock();
+    }
+    this.renderer.domElement.removeEventListener('click', this.handleCanvasClick);
+    document.removeEventListener('pointerlockchange', this.handlePointerLockChange);
+    document.removeEventListener('mousemove', this.handleMouseMove);
     window.removeEventListener('resize', this.onResize);
     this.renderer.dispose();
     this.bus.clear();

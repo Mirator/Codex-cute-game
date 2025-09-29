@@ -70,7 +70,7 @@ export class KeyboardInput {
     const right = this.down.has(layout.right);
     const move = new THREE.Vector2(
       (right ? 1 : 0) - (left ? 1 : 0),
-      (forward ? 1 : 0) - (backward ? 1 : 0),
+      (backward ? 1 : 0) - (forward ? 1 : 0),
     );
     if (move.lengthSq() > 1) move.normalize();
 
