@@ -87,17 +87,17 @@ export function syncCatMesh(
   if (!rig) return;
 
   const speed = physics ? Math.sqrt(physics.velocity.x ** 2 + physics.velocity.z ** 2) : 0;
-  const moveStrength = Math.min(speed / 4.4, 1);
-  const idleStrength = Math.max(0.2, moveStrength * 0.85);
-  rig.time += delta * (3.4 + moveStrength * 5.6);
+  const moveStrength = Math.min(speed / 4.2, 1);
+  const idleStrength = THREE.MathUtils.clamp(0.24 + moveStrength * 0.56, 0.24, 1);
+  rig.time += delta * (2.8 + moveStrength * 4.4);
 
-  const stride = rig.time * 3.2;
-  const frontSwing = Math.sin(stride) * 0.55 * moveStrength;
-  const frontOpposite = Math.sin(stride + Math.PI) * 0.55 * moveStrength;
-  const backSwing = Math.sin(stride + Math.PI) * 0.65 * moveStrength;
-  const backOpposite = Math.sin(stride) * 0.65 * moveStrength;
+  const stride = rig.time * (2.6 + moveStrength * 0.6);
+  const frontSwing = Math.sin(stride) * 0.45 * moveStrength;
+  const frontOpposite = Math.sin(stride + Math.PI) * 0.45 * moveStrength;
+  const backSwing = Math.sin(stride + Math.PI) * 0.55 * moveStrength;
+  const backOpposite = Math.sin(stride) * 0.55 * moveStrength;
 
-  const kneeBend = (phase: number) => Math.max(0, Math.sin(phase + Math.PI / 2)) * 0.55 * moveStrength;
+  const kneeBend = (phase: number) => Math.max(0, Math.sin(phase + Math.PI / 2)) * 0.45 * moveStrength;
 
   rig.frontLeftLeg.root.rotation.x = rig.frontLeftLeg.baseRoot + frontSwing;
   rig.frontRightLeg.root.rotation.x = rig.frontRightLeg.baseRoot + frontOpposite;
@@ -109,20 +109,20 @@ export function syncCatMesh(
   rig.backLeftLeg.lower.rotation.x = rig.backLeftLeg.baseLower + kneeBend(stride + Math.PI) * 1.2;
   rig.backRightLeg.lower.rotation.x = rig.backRightLeg.baseLower + kneeBend(stride) * 1.2;
 
-  const headBob = Math.sin(rig.time * 2.1) * 0.04 * (0.3 + idleStrength);
-  const headPitch = Math.sin(rig.time * 1.6) * 0.12 * (0.4 + idleStrength * 0.8);
+  const headBob = Math.sin(rig.time * 1.9) * 0.035 * (0.4 + idleStrength * 0.6);
+  const headPitch = Math.sin(rig.time * 1.4) * 0.09 * (0.45 + idleStrength * 0.6);
   rig.headPivot.position.y = rig.headBaseY + headBob;
   rig.headPivot.rotation.x = rig.headBaseRotX + headPitch;
   rig.headPivot.rotation.y = Math.sin(rig.time * 1.5) * 0.08 * idleStrength;
 
-  rig.tail[0].rotation.x = rig.tailBaseRotations[0] + Math.cos(rig.time * 1.4) * 0.12 * idleStrength;
-  rig.tail[0].rotation.y = Math.sin(rig.time * 1.3) * 0.28 * idleStrength;
-  rig.tail[1].rotation.x = rig.tailBaseRotations[1] + Math.sin(rig.time * 1.8 + 0.6) * 0.18 * idleStrength;
-  rig.tail[1].rotation.y = Math.sin(rig.time * 1.7 + Math.PI / 3) * 0.18 * idleStrength;
-  rig.tail[2].rotation.x = rig.tailBaseRotations[2] + Math.sin(rig.time * 2.4 + 1.2) * 0.22 * idleStrength;
-  rig.tail[2].rotation.y = Math.sin(rig.time * 2.2 + Math.PI / 2) * 0.24 * idleStrength;
+  rig.tail[0].rotation.x = rig.tailBaseRotations[0] + Math.cos(rig.time * 1.2) * 0.1 * idleStrength;
+  rig.tail[0].rotation.y = Math.sin(rig.time * 1.1) * 0.22 * idleStrength;
+  rig.tail[1].rotation.x = rig.tailBaseRotations[1] + Math.sin(rig.time * 1.6 + 0.6) * 0.16 * idleStrength;
+  rig.tail[1].rotation.y = Math.sin(rig.time * 1.5 + Math.PI / 3) * 0.16 * idleStrength;
+  rig.tail[2].rotation.x = rig.tailBaseRotations[2] + Math.sin(rig.time * 2.1 + 1.2) * 0.18 * idleStrength;
+  rig.tail[2].rotation.y = Math.sin(rig.time * 1.9 + Math.PI / 2) * 0.2 * idleStrength;
 
-  const whiskerOffset = Math.sin(rig.time * 2.3) * 0.22 * (0.4 + idleStrength);
+  const whiskerOffset = Math.sin(rig.time * 2.0) * 0.18 * (0.4 + idleStrength * 0.8);
   rig.whiskers[0].rotation.y = rig.whiskerBaseRot + whiskerOffset;
   rig.whiskers[1].rotation.y = -rig.whiskerBaseRot - whiskerOffset;
 
