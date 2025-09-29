@@ -26,7 +26,7 @@ Aurora Glade Adventure is a cozy third-person exploration prototype inspired by 
 
 ## Deploying to GitHub Pages
 
-This project ships with a GitHub Actions workflow that builds the game with Vite and publishes the contents of the `dist/` folder to the `gh-pages` branch using the official Pages deployment pipeline.
+This project ships with a GitHub Actions workflow that builds the game with Vite and publishes the contents of the `dist/` folder to the `gh-pages` branch using the official Pages deployment pipeline. During the build the workflow sets a `GITHUB_PAGES` flag so that Vite automatically configures the correct repository base path (`/${repo}/`) for assets.
 
 1. Ensure GitHub Pages is configured to use the **GitHub Actions** source.
 2. Push changes to `main` (or trigger the workflow manually) and wait for the "Deploy Aurora Glade Adventure" workflow to complete.
