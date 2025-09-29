@@ -103,7 +103,7 @@ function createCatMesh(): THREE.Group {
   const stripeMaterial = new THREE.MeshStandardMaterial({ color: CAT_STRIPE, roughness: 0.55, metalness: 0.04 });
 
   const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.26, 0.76, 20, 28), furMaterial);
-  body.rotation.z = Math.PI / 2;
+  body.rotation.x = Math.PI / 2;
   body.position.set(0, 0.44, -0.02);
   body.castShadow = true;
   group.add(body);
@@ -121,7 +121,7 @@ function createCatMesh(): THREE.Group {
   group.add(haunch);
 
   const belly = new THREE.Mesh(new THREE.CapsuleGeometry(0.18, 0.58, 16, 20), bellyMaterial);
-  belly.rotation.z = Math.PI / 2;
+  belly.rotation.x = Math.PI / 2;
   belly.position.set(0, 0.34, -0.02);
   belly.castShadow = false;
   group.add(belly);
@@ -293,7 +293,7 @@ function createCatMesh(): THREE.Group {
 
   const tailBase = new THREE.Group();
   tailBase.position.set(0, 0.52, -0.46);
-  tailBase.rotation.x = Math.PI * 0.36;
+  tailBase.rotation.x = -Math.PI * 0.48;
   group.add(tailBase);
 
   const tailSegment1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.085, 0.32, 12), furMaterial);
