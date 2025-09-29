@@ -1,6 +1,6 @@
-# Aurora Glade Adventure Development Checklist
+# Mischief Cat Development Checklist
 
-This checklist tracks milestones and granular tasks for building the "Aurora Glade Adventure" third-person cute exploratory-action game in Three.js. Use it as a living document—check off items as work progresses and add dates/owners to keep the team aligned.
+This checklist tracks milestones and granular tasks for building the "Mischief Cat" third-person cute exploratory-action game in Three.js. Use it as a living document—check off items as work progresses and add dates/owners to keep the team aligned.
 
 ## 1. Vision & Planning
 - [ ] Define high-level elevator pitch and emotional pillars.
