@@ -140,7 +140,8 @@ function createCatMesh(): THREE.Group {
   group.add(collar);
 
   const headPivot = new THREE.Group();
-  headPivot.position.set(0, 0.66, 0.18);
+  headPivot.position.set(0, 0.78, 0.26);
+  headPivot.rotation.x = -Math.PI * 0.14;
   group.add(headPivot);
 
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 26, 20), furMaterial);
@@ -216,8 +217,8 @@ function createCatMesh(): THREE.Group {
 
   function createEar(sign: 1 | -1): THREE.Group {
     const earPivot = new THREE.Group();
-    earPivot.position.set(0.12 * sign, 0.17, 0.02);
-    earPivot.rotation.z = sign * Math.PI * 0.18;
+    earPivot.position.set(0.11 * sign, 0.22, 0.08);
+    earPivot.rotation.set(-Math.PI * 0.16, 0, sign * Math.PI * 0.12);
     const outer = new THREE.Mesh(earOuterGeo, earOuterMat);
     outer.position.y = 0.13;
     outer.castShadow = true;
