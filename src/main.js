@@ -38,36 +38,102 @@ const tmpVec3 = new THREE.Vector3();
 
 class InputManager {
   constructor() {
-    this.keys = new Set();
+    this.active = new Set();
     this.pressed = new Set();
+    this.layout = this.#detectDefaultLayout();
+    this.onLayoutChange = null;
     window.addEventListener('keydown', (event) => {
       if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.code)) {
         event.preventDefault();
       }
-      if (!this.keys.has(event.code)) {
-        this.pressed.add(event.code);
-      }
-      this.keys.add(event.code);
+      this.#handleKeyDown(event);
     });
     window.addEventListener('keyup', (event) => {
-      this.keys.delete(event.code);
+      this.#handleKeyUp(event);
     });
   }
 
-  isDown(code) {
-    return this.keys.has(code);
+  get usesAzerty() {
+    return this.layout === 'azerty';
   }
 
-  consume(code) {
-    if (this.pressed.has(code)) {
-      this.pressed.delete(code);
-      return true;
+  isDown(...identifiers) {
+    return identifiers.some((identifier) => this.active.has(this.#normalizeIdentifier(identifier)));
+  }
+
+  consume(...identifiers) {
+    for (const identifier of identifiers) {
+      const normalised = this.#normalizeIdentifier(identifier);
+      if (this.pressed.has(normalised)) {
+        this.pressed.delete(normalised);
+        return true;
+      }
     }
     return false;
   }
 
   frameEnd() {
     this.pressed.clear();
+  }
+
+  #detectDefaultLayout() {
+    if (typeof navigator !== 'undefined') {
+      const locale = (navigator.language || '').toLowerCase();
+      if (locale.startsWith('fr') || locale.startsWith('be')) {
+        return 'azerty';
+      }
+    }
+    return 'qwerty';
+  }
+
+  #handleKeyDown(event) {
+    this.#updateLayout(event);
+    const identifiers = this.#identifiersFromEvent(event);
+    identifiers.forEach((identifier) => {
+      if (!this.active.has(identifier)) {
+        this.pressed.add(identifier);
+      }
+      this.active.add(identifier);
+    });
+  }
+
+  #handleKeyUp(event) {
+    const identifiers = this.#identifiersFromEvent(event);
+    identifiers.forEach((identifier) => {
+      this.active.delete(identifier);
+    });
+  }
+
+  #identifiersFromEvent(event) {
+    const identifiers = new Set();
+    identifiers.add(this.#normalizeIdentifier(event.code));
+    if (event.key && event.key.length === 1 && event.key !== ' ') {
+      identifiers.add(this.#normalizeIdentifier(event.key));
+    }
+    return identifiers;
+  }
+
+  #normalizeIdentifier(identifier) {
+    if (!identifier) return identifier;
+    return identifier.length === 1 ? identifier.toLowerCase() : identifier;
+  }
+
+  #updateLayout(event) {
+    const previousLayout = this.layout;
+    const key = event.key ? event.key.toLowerCase() : '';
+    if (event.code === 'KeyA') {
+      if (key === 'q') this.layout = 'azerty';
+      else if (key === 'a') this.layout = 'qwerty';
+    } else if (event.code === 'KeyQ') {
+      if (key === 'a') this.layout = 'azerty';
+      else if (key === 'q') this.layout = 'qwerty';
+    } else if (event.code === 'KeyW') {
+      if (key === 'z') this.layout = 'azerty';
+      else if (key === 'w') this.layout = 'qwerty';
+    }
+    if (previousLayout !== this.layout && typeof this.onLayoutChange === 'function') {
+      this.onLayoutChange(this.layout);
+    }
   }
 }
 
@@ -158,10 +224,15 @@ class PlayerController {
     const { input, cameraYaw: camYaw, moodBoost } = context;
 
     const desired = new THREE.Vector3();
-    if (input.isDown('KeyW')) desired.z -= 1;
-    if (input.isDown('KeyS')) desired.z += 1;
-    if (input.isDown('KeyA')) desired.x -= 1;
-    if (input.isDown('KeyD')) desired.x += 1;
+    const forwardKeys = input.usesAzerty ? ['KeyW', 'ArrowUp', 'z'] : ['KeyW', 'ArrowUp'];
+    const backwardKeys = input.usesAzerty ? ['KeyS', 'ArrowDown', 's'] : ['KeyS', 'ArrowDown'];
+    const leftKeys = input.usesAzerty ? ['KeyA', 'ArrowLeft', 'q'] : ['KeyA', 'ArrowLeft'];
+    const rightKeys = input.usesAzerty ? ['KeyD', 'ArrowRight', 'd'] : ['KeyD', 'ArrowRight'];
+
+    if (input.isDown(...forwardKeys)) desired.z += 1;
+    if (input.isDown(...backwardKeys)) desired.z -= 1;
+    if (input.isDown(...leftKeys)) desired.x -= 1;
+    if (input.isDown(...rightKeys)) desired.x += 1;
 
     if (desired.lengthSq() > 0) desired.normalize();
 
@@ -740,6 +811,22 @@ const prompt = document.getElementById('interactionPrompt');
 const narration = document.getElementById('narration');
 const photoOverlay = document.getElementById('photoOverlay');
 const loadingPanel = document.getElementById('loading');
+const controlMove = document.getElementById('controlMove');
+const controlEmpathy = document.getElementById('controlEmpathy');
+
+function refreshControlHints() {
+  if (!controlMove || !controlEmpathy) return;
+  if (input.usesAzerty) {
+    controlMove.innerHTML = '<strong>ZQSD</strong> — Move Mira';
+    controlEmpathy.innerHTML = '<strong>A</strong> — Empathy pulse';
+  } else {
+    controlMove.innerHTML = '<strong>WASD</strong> — Move Mira';
+    controlEmpathy.innerHTML = '<strong>Q</strong> — Empathy pulse';
+  }
+}
+
+refreshControlHints();
+input.onLayoutChange = () => refreshControlHints();
 
 let statusTimer = 0;
 let photoMode = false;

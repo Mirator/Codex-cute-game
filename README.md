@@ -15,11 +15,11 @@ Aurora Glade Adventure is a cozy third-person exploration prototype inspired by 
 3. Open the printed local URL in your browser and click the scene to capture the cursor.
 
 ### Controls
-- **WASD** — Move Mira
+- **WASD** (or **ZQSD** on AZERTY keyboards) — Move Mira
 - **Space** — Jump / Glide while airborne
 - **Shift** — Dodge burst
 - **E** — Harmonize corrupted shrines
-- **Q** — Empathy pulse
+- **Q** (or **A** on AZERTY keyboards) — Empathy pulse
 - **R** — Cheer with Lumi
 - **P** — Toggle photo mode
 - **Mouse** — Look around (click the scene to lock the cursor)
