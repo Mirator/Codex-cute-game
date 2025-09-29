@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  base: '/Codex-cute-game/',
   build: {
     target: 'es2022',
   },
