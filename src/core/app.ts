@@ -30,6 +30,7 @@ export class App {
   private readonly catMesh: THREE.Group;
   private readonly player: number;
   private lastTime = 0;
+  private frameDelta = 0;
   private running = false;
   private cameraYaw = Math.PI * 0.8;
 
@@ -68,6 +69,7 @@ export class App {
       const now = performance.now() / 1000;
       const delta = now - this.lastTime;
       this.lastTime = now;
+      this.frameDelta = delta;
       updateInput(this.world, this.keyboard);
       this.time.advance(delta, (step) => this.step(step));
       this.updateCamera();
@@ -99,12 +101,13 @@ export class App {
   private updateCamera(): void {
     const transform = this.world.get(this.player, 'transform');
     if (!transform) return;
+    const physics = this.world.get(this.player, 'physics');
     const target = transform.position.clone();
     const offset = new THREE.Vector3(Math.sin(this.cameraYaw) * 6, 3.6, Math.cos(this.cameraYaw) * 6);
     const desired = target.clone().add(offset);
     this.camera.position.lerp(desired, 0.12);
     this.camera.lookAt(target.x, target.y + 0.5, target.z);
-    syncCatMesh(transform, this.catMesh);
+    syncCatMesh(transform, physics, this.catMesh, this.frameDelta);
   }
 
   private render(): void {
