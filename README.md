@@ -1,6 +1,8 @@
-# Aurora Glade Adventure
+# Mischief Cat
 
-Aurora Glade Adventure is a cozy third-person exploration prototype inspired by the design documents in this repository. Guide Mira and her luminous companion Lumi as they cleanse corrupted shrines, restore the Prism Tree, and soak in the aurora-soaked forest—right in the browser thanks to Three.js and Vite.
+Mischief Cat is a browser-based vertical slice inspired by the design brief in `docs/mischief-cat-plan.md`. Guide a nimble alley
+ cat through Old Town Alleyways, string together mischief combos, and manage the escalating heat meter while NPCs react to your
+ antics. The prototype runs in the browser using Three.js, a lightweight ECS architecture, and data-driven configuration.
 
 ## Play It
 
@@ -12,42 +14,46 @@ Aurora Glade Adventure is a cozy third-person exploration prototype inspired by 
    ```bash
    npm run dev
    ```
-3. Open the printed local URL in your browser and click the scene to capture the cursor.
+3. Open the printed local URL in your browser. The HUD shows score, combo, and heat; contextual prompts appear when props can be 
+interacted with.
 
 ### Controls
-- **WASD** (or **ZQSD** on AZERTY keyboards) — Move Mira
-- **Space** — Jump / Glide while airborne
-- **Shift** — Dodge burst
-- **E** — Harmonize corrupted shrines
-- **Q** (or **A** on AZERTY keyboards) — Empathy pulse
-- **R** — Cheer with Lumi
-- **P** — Toggle photo mode
-- **Mouse** — Look around (click the scene to lock the cursor)
+- **WASD** (or **ZQSD** on AZERTY keyboards) — Move the cat
+- **Shift** — Sprint
+- **Space** — Jump / Pounce (supports coyote time)
+- **E** — Interact, scratch, or carry lightweight props
 
-## Deploying to GitHub Pages
+### Objectives
+- Trigger the laundry line cascade by starting trouble at the paint cans.
+- Chain prop interactions quickly to keep your combo multiplier alive.
+- Watch the heat meter; hide behind crates to cool off before the human and dog escalate to a chase.
 
-This project ships with a GitHub Actions workflow that builds the game with Vite and publishes the contents of the `dist/` folder to the `gh-pages` branch using the official Pages deployment pipeline. During the build the workflow sets a `GITHUB_PAGES` flag so that Vite automatically configures the correct repository base path (`/${repo}/`) for assets.
+Best scores and combo tiers persist in LocalStorage so you can chase a perfect run.
 
-1. Ensure GitHub Pages is configured to use the **GitHub Actions** source.
-2. Push changes to `main` (or trigger the workflow manually) and wait for the "Deploy Aurora Glade Adventure" workflow to complete.
-3. The published site will be available at `https://<your-username>.github.io/Codex-cute-game/`.
+## Tooling
 
-You can also build the static site locally:
+- **Vite + TypeScript** for hot module reloading and production builds.
+- **Vitest** powers automated tests for scoring math, heat decay, and AI reactions (`npm test`).
+- **Three.js** renders the alleyway diorama, props, and characters.
+
+Build a distributable version with:
 
 ```bash
 npm run build
 ```
 
-The production-ready files will be written to `dist/`.
-
 ## Project Structure
 
-- `index.html` – Root HTML shell containing HUD and instructions.
-- `src/main.js` – Three.js gameplay scene, controllers, and UI bindings.
-- `src/style.css` – UI styling for overlays and panels.
-- `docs/` – Original planning documents (`development_checklist.md`, `game_design_document.md`).
-- `.github/workflows/deploy.yml` – Continuous deployment to GitHub Pages.
+- `data/` – Data-driven configuration for prop categories, scoring, and heat thresholds.
+- `src/core/` – Application bootstrap, event bus, and configuration glue.
+- `src/ecs/` – Lightweight ECS world and component definitions.
+- `src/input/` – Keyboard input mapper with QWERTY/AZERTY detection.
+- `src/scene/` – Environment and actor factories.
+- `src/systems/` – Gameplay systems (player control, physics, interactions, scoring, heat, AI, chain reactions).
+- `src/ui/` – HUD renderer with LocalStorage persistence.
+- `tests/` – Vitest suites covering core gameplay systems.
 
-## Credits & References
+## Credits
 
-Gameplay tone, mechanics, and art direction are aligned with the accompanying design docs. Three.js powers rendering and animation, while Vite provides a modern development and build pipeline.
+The tone, scope, and milestone goals follow the Mischief Cat plan authored for this repository. Audio and VFX hooks are scaffold
+ed for future productionisation.

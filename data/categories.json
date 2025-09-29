@@ -1,0 +1,52 @@
+{
+  "props": {
+    "small": {
+      "name": "Trinkets",
+      "baseScore": 25,
+      "heatOnBreak": 6,
+      "comboBonus": 1
+    },
+    "medium": {
+      "name": "Bumpables",
+      "baseScore": 60,
+      "heatOnBreak": 10,
+      "comboBonus": 2
+    },
+    "container": {
+      "name": "Crates",
+      "baseScore": 90,
+      "heatOnBreak": 14,
+      "comboBonus": 3
+    },
+    "food": {
+      "name": "Snacks",
+      "baseScore": 40,
+      "heatOnBreak": 4,
+      "comboBonus": 1
+    },
+    "mechanism": {
+      "name": "Gizmos",
+      "baseScore": 110,
+      "heatOnBreak": 18,
+      "comboBonus": 4
+    }
+  },
+  "ai": {
+    "human": {
+      "investigateRange": 12,
+      "warnHeat": 45,
+      "chaseHeat": 70,
+      "chaseSpeed": 4.5
+    },
+    "dog": {
+      "sprintSpeed": 6,
+      "leashRadius": 9,
+      "cooldown": 8
+    },
+    "pigeon": {
+      "scatterRadius": 8,
+      "regroupDelay": 6,
+      "maxPopulation": 30
+    }
+  }
+}

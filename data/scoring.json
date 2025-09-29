@@ -1,0 +1,17 @@
+{
+  "baseComboWindow": 5,
+  "comboDecay": 1,
+  "chainBonus": 200,
+  "comboMultipliers": [
+    { "threshold": 1, "multiplier": 1 },
+    { "threshold": 3, "multiplier": 1.25 },
+    { "threshold": 5, "multiplier": 1.5 },
+    { "threshold": 8, "multiplier": 2 },
+    { "threshold": 12, "multiplier": 2.5 }
+  ],
+  "summary": {
+    "bronze": 600,
+    "silver": 1200,
+    "gold": 2000
+  }
+}

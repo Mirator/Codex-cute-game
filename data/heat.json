@@ -1,0 +1,12 @@
+{
+  "maxHeat": 100,
+  "decayPerSecond": 6,
+  "alertDecayMultiplier": 0.6,
+  "hideDecayMultiplier": 2,
+  "thresholds": [
+    { "name": "Calm", "value": 0 },
+    { "name": "Curious", "value": 25 },
+    { "name": "Alert", "value": 50 },
+    { "name": "Chasing", "value": 75 }
+  ]
+}
