@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { PhysicsBody, PlayerController, Transform } from '../ecs/components';
+import type { CatRigData } from '../scene/actors';
 import { World } from '../ecs/world';
 
 const forward = new THREE.Vector3();
@@ -66,24 +67,7 @@ export function syncCatMesh(
   mesh.position.y += 0.18;
   mesh.rotation.y = transform.rotationY;
 
-  const rig = mesh.userData.cat as
-    | {
-        headPivot: THREE.Group;
-        headBaseY: number;
-        headBaseRotX: number;
-        tail: THREE.Group[];
-        tailBaseRotations: number[];
-        frontLeftLeg: { root: THREE.Group; lower: THREE.Group; baseRoot: number; baseLower: number };
-        frontRightLeg: { root: THREE.Group; lower: THREE.Group; baseRoot: number; baseLower: number };
-        backLeftLeg: { root: THREE.Group; lower: THREE.Group; baseRoot: number; baseLower: number };
-        backRightLeg: { root: THREE.Group; lower: THREE.Group; baseRoot: number; baseLower: number };
-        whiskers: [THREE.Mesh, THREE.Mesh];
-        whiskerBaseRot: number;
-        ears: [THREE.Group, THREE.Group];
-        earBaseRot: number;
-        time: number;
-      }
-    | undefined;
+  const rig = mesh.userData.cat as CatRigData | undefined;
   if (!rig) return;
 
   const speed = physics ? Math.sqrt(physics.velocity.x ** 2 + physics.velocity.z ** 2) : 0;

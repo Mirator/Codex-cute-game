@@ -20,14 +20,14 @@ const CAT_BELLY = 0xffe7d1;
 const CAT_DARK = 0x3a261c;
 const CAT_STRIPE = 0xd8875a;
 
-interface LegRigData {
+export interface LegRigData {
   root: THREE.Group;
   lower: THREE.Group;
   baseRoot: number;
   baseLower: number;
 }
 
-interface CatRigData {
+export interface CatRigData {
   headPivot: THREE.Group;
   headBaseY: number;
   headBaseRotX: number;
