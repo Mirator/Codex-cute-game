@@ -217,15 +217,18 @@ function createCatMesh(): THREE.Group {
 
   function createEar(sign: 1 | -1): THREE.Group {
     const earPivot = new THREE.Group();
-    earPivot.position.set(0.11 * sign, 0.22, 0.08);
-    earPivot.rotation.set(-Math.PI * 0.16, 0, sign * Math.PI * 0.12);
+    earPivot.position.set(0.14 * sign, 0.21, -0.02);
+    earPivot.rotation.set(Math.PI * 0.12, sign * Math.PI * 0.08, sign * Math.PI * 0.24);
     const outer = new THREE.Mesh(earOuterGeo, earOuterMat);
     outer.position.y = 0.13;
+    outer.rotation.x = -Math.PI * 0.08;
     outer.castShadow = true;
     earPivot.add(outer);
     const inner = new THREE.Mesh(earInnerGeo, earInnerMat);
-    inner.position.y = 0.11;
-    inner.scale.set(0.82, 0.82, 0.82);
+    inner.position.y = 0.1;
+    inner.position.z = 0.01;
+    inner.scale.set(0.82, 0.78, 0.82);
+    inner.rotation.x = -Math.PI * 0.05;
     earPivot.add(inner);
     return earPivot;
   }
@@ -294,7 +297,7 @@ function createCatMesh(): THREE.Group {
 
   const tailBase = new THREE.Group();
   tailBase.position.set(0, 0.52, -0.46);
-  tailBase.rotation.x = -Math.PI * 0.48;
+  tailBase.rotation.x = -Math.PI * 0.16;
   group.add(tailBase);
 
   const tailSegment1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.085, 0.32, 12), furMaterial);
@@ -303,22 +306,22 @@ function createCatMesh(): THREE.Group {
   tailBase.add(tailSegment1);
 
   const tailMid = new THREE.Group();
-  tailMid.position.y = 0.32;
+  tailMid.position.y = 0.3;
   tailSegment1.add(tailMid);
-  tailMid.rotation.x = Math.PI * 0.05;
+  tailMid.rotation.set(Math.PI * 0.2, 0, -Math.PI * 0.05);
 
   const tailSegment2 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.32, 12), furMaterial);
-  tailSegment2.position.y = 0.16;
+  tailSegment2.position.y = 0.15;
   tailSegment2.castShadow = true;
   tailMid.add(tailSegment2);
 
   const tailTip = new THREE.Group();
-  tailTip.position.y = 0.32;
+  tailTip.position.y = 0.29;
   tailSegment2.add(tailTip);
-  tailTip.rotation.x = Math.PI * 0.02;
+  tailTip.rotation.set(Math.PI * 0.14, 0, Math.PI * 0.06);
 
   const tailSegment3 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.03, 0.3, 12), accentMaterial);
-  tailSegment3.position.y = 0.15;
+  tailSegment3.position.y = 0.14;
   tailSegment3.castShadow = true;
   tailTip.add(tailSegment3);
 
