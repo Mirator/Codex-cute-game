@@ -37,7 +37,7 @@ export interface CatRigData {
   frontRightLeg: LegRigData;
   backLeftLeg: LegRigData;
   backRightLeg: LegRigData;
-  whiskers: [THREE.Mesh, THREE.Mesh];
+  whiskers: [THREE.Object3D, THREE.Object3D];
   whiskerBaseRot: number;
   ears: [THREE.Group, THREE.Group];
   earBaseRot: number;
@@ -102,36 +102,64 @@ function createCatMesh(): THREE.Group {
   const darkMaterial = new THREE.MeshStandardMaterial({ color: CAT_DARK, roughness: 0.5, metalness: 0.08 });
   const stripeMaterial = new THREE.MeshStandardMaterial({ color: CAT_STRIPE, roughness: 0.55, metalness: 0.04 });
 
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.26, 0.76, 20, 28), furMaterial);
+  const bodyProfile = [
+    new THREE.Vector2(0, -0.52),
+    new THREE.Vector2(0.15, -0.5),
+    new THREE.Vector2(0.28, -0.42),
+    new THREE.Vector2(0.34, -0.26),
+    new THREE.Vector2(0.36, -0.04),
+    new THREE.Vector2(0.33, 0.16),
+    new THREE.Vector2(0.26, 0.32),
+    new THREE.Vector2(0.16, 0.42),
+    new THREE.Vector2(0.08, 0.48),
+    new THREE.Vector2(0, 0.5),
+  ];
+
+  const body = new THREE.Mesh(new THREE.LatheGeometry(bodyProfile, 36), furMaterial);
   body.rotation.x = Math.PI / 2;
-  body.position.set(0, 0.44, -0.02);
+  body.position.set(0, 0.46, -0.04);
+  body.scale.set(1, 0.94, 1.05);
   body.castShadow = true;
   group.add(body);
 
-  const chest = new THREE.Mesh(new THREE.SphereGeometry(0.28, 24, 18), furMaterial);
-  chest.scale.set(0.75, 0.58, 0.9);
-  chest.position.set(0, 0.46, 0.14);
+  const chest = new THREE.Mesh(new THREE.SphereGeometry(0.26, 26, 20), furMaterial);
+  chest.scale.set(0.7, 0.54, 0.96);
+  chest.position.set(0, 0.5, 0.18);
   chest.castShadow = true;
   group.add(chest);
 
-  const haunch = new THREE.Mesh(new THREE.SphereGeometry(0.32, 24, 18), furMaterial);
-  haunch.scale.set(0.78, 0.62, 1.04);
-  haunch.position.set(0, 0.42, -0.34);
+  const haunch = new THREE.Mesh(new THREE.SphereGeometry(0.34, 26, 20), furMaterial);
+  haunch.scale.set(0.82, 0.58, 1.12);
+  haunch.position.set(0, 0.42, -0.36);
   haunch.castShadow = true;
   group.add(haunch);
 
-  const belly = new THREE.Mesh(new THREE.CapsuleGeometry(0.18, 0.58, 16, 20), bellyMaterial);
+  const belly = new THREE.Mesh(new THREE.CapsuleGeometry(0.16, 0.6, 18, 22), bellyMaterial);
   belly.rotation.x = Math.PI / 2;
-  belly.position.set(0, 0.34, -0.02);
+  belly.position.set(0, 0.32, -0.02);
   belly.castShadow = false;
   group.add(belly);
 
-  const stripeRidgeGeo = new THREE.CylinderGeometry(0.08, 0.11, 0.32, 10, 1, true);
-  stripeRidgeGeo.rotateX(Math.PI / 2);
-  const stripeRidge = new THREE.Mesh(stripeRidgeGeo, stripeMaterial);
-  stripeRidge.position.set(0, 0.44, -0.12);
-  stripeRidge.scale.set(1, 1, 1.1);
-  group.add(stripeRidge);
+  const shoulderBlade = new THREE.Mesh(new THREE.CapsuleGeometry(0.08, 0.24, 14, 18), stripeMaterial);
+  shoulderBlade.rotation.set(Math.PI / 2.4, 0, Math.PI * 0.26);
+  shoulderBlade.position.set(-0.1, 0.54, 0.02);
+  shoulderBlade.castShadow = false;
+  const shoulderBladeMirror = shoulderBlade.clone();
+  shoulderBladeMirror.position.x = -shoulderBlade.position.x;
+  shoulderBladeMirror.rotation.z = -shoulderBlade.rotation.z;
+  group.add(shoulderBlade, shoulderBladeMirror);
+
+  const spineHighlight = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.68, 14, 20), stripeMaterial);
+  spineHighlight.rotation.x = Math.PI / 2;
+  spineHighlight.position.set(0, 0.47, -0.1);
+  spineHighlight.scale.set(0.92, 1, 1);
+  group.add(spineHighlight);
+
+  const neck = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.24, 14, 18), furMaterial);
+  neck.rotation.set(Math.PI / 2.2, 0, 0);
+  neck.position.set(0, 0.64, 0.18);
+  neck.castShadow = true;
+  group.add(neck);
 
   const collar = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.03, 12, 24), accentMaterial);
   collar.rotation.x = Math.PI / 2;
@@ -140,35 +168,41 @@ function createCatMesh(): THREE.Group {
   group.add(collar);
 
   const headPivot = new THREE.Group();
-  headPivot.position.set(0, 0.78, 0.26);
-  headPivot.rotation.x = -Math.PI * 0.14;
+  headPivot.position.set(0, 0.82, 0.3);
+  headPivot.rotation.x = -Math.PI * 0.18;
   group.add(headPivot);
 
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 26, 20), furMaterial);
-  head.position.set(0, 0, 0.12);
+  head.scale.set(0.96, 1, 1.08);
+  head.position.set(0, 0.02, 0.1);
   head.castShadow = true;
   headPivot.add(head);
 
-  const cheekGeo = new THREE.SphereGeometry(0.12, 18, 14);
+  const forehead = new THREE.Mesh(new THREE.SphereGeometry(0.18, 22, 18), furMaterial);
+  forehead.scale.set(1, 0.75, 0.6);
+  forehead.position.set(0, 0.12, 0.02);
+  headPivot.add(forehead);
+
+  const cheekGeo = new THREE.SphereGeometry(0.13, 20, 16);
   const leftCheek = new THREE.Mesh(cheekGeo, furMaterial);
-  leftCheek.position.set(-0.12, -0.02, 0.14);
-  leftCheek.scale.set(0.9, 0.8, 1.1);
+  leftCheek.position.set(-0.12, -0.02, 0.16);
+  leftCheek.scale.set(0.82, 0.76, 1.2);
   const rightCheek = leftCheek.clone();
   rightCheek.position.x = 0.12;
   headPivot.add(leftCheek, rightCheek);
 
   const muzzle = new THREE.Mesh(new THREE.SphereGeometry(0.13, 18, 14), bellyMaterial);
-  muzzle.position.set(0, -0.05, 0.26);
-  muzzle.scale.set(1.2, 0.7, 1.4);
+  muzzle.position.set(0, -0.05, 0.28);
+  muzzle.scale.set(1.28, 0.64, 1.5);
   headPivot.add(muzzle);
 
   const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.008, 8, 24, Math.PI), darkMaterial);
   mouth.rotation.set(Math.PI / 2, 0, 0);
-  mouth.position.set(0, -0.09, 0.32);
+  mouth.position.set(0, -0.09, 0.34);
   headPivot.add(mouth);
 
   const nose = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.08, 14), accentMaterial);
-  nose.position.set(0, -0.02, 0.35);
+  nose.position.set(0, -0.02, 0.37);
   nose.rotation.x = Math.PI;
   headPivot.add(nose);
 
@@ -176,38 +210,48 @@ function createCatMesh(): THREE.Group {
   const irisMat = new THREE.MeshStandardMaterial({ color: 0x224255, emissive: 0x0b1e26, emissiveIntensity: 0.45 });
   const pupilMat = new THREE.MeshStandardMaterial({ color: 0x081012, emissive: 0x0a1113, emissiveIntensity: 0.3 });
   const leftEye = new THREE.Mesh(eyeGeo, irisMat);
-  leftEye.scale.set(1, 1.2, 0.65);
-  leftEye.position.set(-0.09, 0.03, 0.24);
+  leftEye.scale.set(1, 1.32, 0.58);
+  leftEye.position.set(-0.086, 0.032, 0.25);
   const rightEye = leftEye.clone();
-  rightEye.position.x = 0.09;
+  rightEye.position.x = 0.086;
   headPivot.add(leftEye, rightEye);
 
   const pupilGeo = new THREE.SphereGeometry(0.022, 12, 10);
   const leftPupil = new THREE.Mesh(pupilGeo, pupilMat);
-  leftPupil.scale.set(1, 1.8, 0.5);
-  leftPupil.position.set(-0.09, 0.03, 0.28);
+  leftPupil.scale.set(0.66, 1.9, 0.44);
+  leftPupil.position.set(-0.086, 0.03, 0.29);
   const rightPupil = leftPupil.clone();
-  rightPupil.position.x = 0.09;
+  rightPupil.position.x = 0.086;
   headPivot.add(leftPupil, rightPupil);
 
   const eyebrowGeo = new THREE.BoxGeometry(0.12, 0.02, 0.02);
   const eyebrowMat = new THREE.MeshStandardMaterial({ color: CAT_DARK, roughness: 0.6 });
   const leftBrow = new THREE.Mesh(eyebrowGeo, eyebrowMat);
-  leftBrow.position.set(-0.09, 0.12, 0.2);
-  leftBrow.rotation.z = Math.PI * 0.08;
+  leftBrow.position.set(-0.088, 0.13, 0.2);
+  leftBrow.rotation.z = Math.PI * 0.1;
   const rightBrow = leftBrow.clone();
-  rightBrow.position.x = 0.09;
-  rightBrow.rotation.z = -Math.PI * 0.08;
+  rightBrow.position.x = 0.088;
+  rightBrow.rotation.z = -Math.PI * 0.1;
   headPivot.add(leftBrow, rightBrow);
 
-  const whiskerGeo = new THREE.BoxGeometry(0.28, 0.008, 0.01);
   const whiskerMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
-  const leftWhisker = new THREE.Mesh(whiskerGeo, whiskerMat);
-  leftWhisker.position.set(-0.17, -0.03, 0.32);
-  leftWhisker.rotation.y = Math.PI * 0.04;
-  const rightWhisker = leftWhisker.clone();
-  rightWhisker.position.x = 0.17;
-  rightWhisker.rotation.y = -Math.PI * 0.04;
+
+  function createWhiskerFan(sign: 1 | -1): THREE.Group {
+    const fan = new THREE.Group();
+    fan.position.set(0.17 * sign, -0.03, 0.33);
+    fan.rotation.y = Math.PI * 0.05 * sign;
+    for (let i = 0; i < 3; i += 1) {
+      const whisker = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.008, 0.01), whiskerMat);
+      whisker.position.x = (whisker.geometry.parameters.width / 2) * -sign;
+      whisker.rotation.z = THREE.MathUtils.degToRad(-6 + i * 6) * sign;
+      whisker.castShadow = false;
+      fan.add(whisker);
+    }
+    return fan;
+  }
+
+  const leftWhisker = createWhiskerFan(-1);
+  const rightWhisker = createWhiskerFan(1);
   headPivot.add(leftWhisker, rightWhisker);
 
   const earOuterGeo = new THREE.ConeGeometry(0.13, 0.26, 14);
@@ -217,11 +261,11 @@ function createCatMesh(): THREE.Group {
 
   function createEar(sign: 1 | -1): THREE.Group {
     const earPivot = new THREE.Group();
-    earPivot.position.set(0.14 * sign, 0.21, -0.02);
-    earPivot.rotation.set(Math.PI * 0.12, sign * Math.PI * 0.08, sign * Math.PI * 0.24);
+    earPivot.position.set(0.15 * sign, 0.24, -0.04);
+    earPivot.rotation.set(Math.PI * 0.16, sign * Math.PI * 0.1, sign * Math.PI * 0.22);
     const outer = new THREE.Mesh(earOuterGeo, earOuterMat);
     outer.position.y = 0.13;
-    outer.rotation.x = -Math.PI * 0.08;
+    outer.rotation.x = -Math.PI * 0.12;
     outer.castShadow = true;
     earPivot.add(outer);
     const inner = new THREE.Mesh(earInnerGeo, earInnerMat);
